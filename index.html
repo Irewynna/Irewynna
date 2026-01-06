@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Irewynna — Portfolio</title>
+
+<style>
+:root {
+  --bg: #070b18;
+  --bg-soft: #0e1430;
+  --glass: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.15);
+  --text: #f5f7ff;
+  --muted: #aab1d6;
+  --a1: #7c7cff;
+  --a2: #ff7ad9;
+  --a3: #6dffb0;
+}
+
+[data-theme="light"] {
+  --bg: #f6f7fb;
+  --bg-soft: #ffffff;
+  --glass: rgba(0,0,0,0.05);
+  --border: rgba(0,0,0,0.12);
+  --text: #0e1220;
+  --muted: #5a6175;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at top, var(--bg-soft), var(--bg));
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (hover: none) {
+  body {
+    cursor: auto;
+  }
+}
+
+input, textarea, button {
+  cursor: auto;
+}
+  
+/* ================= INTRO ================= */
+.intro {
+  position: fixed;
+  inset: 0;
+  background: #050713;
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  animation: introFade 3s ease forwards;
+}
+.intro h1 {
+  font-size: 3rem;
+  background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3));
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: introText 3s ease forwards;
+}
+@keyframes introText {
+  0% { letter-spacing: 14px; opacity: 0; }
+  40% { opacity: 1; }
+  100% { letter-spacing: 2px; opacity: 0; }
+}
+@keyframes introFade {
+  0%,70% { opacity: 1; }
+  100% { opacity: 0; pointer-events: none; }
+}
+
+/* ================= CURSOR ================= */
+.cursor {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--a1), var(--a2));
+  pointer-events: none;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+  transition: width .2s, height .2s, border-radius .2s, box-shadow .2s;
+}
+.cursor.active {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(255,122,217,.6);
+}
+
+/* ================= HEADER ================= */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 18px auto;
+  padding: 18px 28px;
+  backdrop-filter: blur(20px);
+  background: linear-gradient(
+    120deg,
+    rgba(124,124,255,.25),
+    rgba(255,122,217,.18),
+    rgba(109,255,176,.2)
+  );
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand {
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3));
+  -webkit-background-clip: text;
+  color: transparent;
+  cursor: pointer;
+}
+nav a, .theme-btn {
+  margin-left: 22px;
+  color: var(--muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ================= RESPONSIVE HEADER ================= */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 26px;
+  height: 2px;
+  background: var(--text);
+  transition: transform .3s, opacity .3s;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  nav {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity .3s ease, transform .3s ease;
+  }
+
+  nav.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  nav a, .theme-btn {
+    margin-left: 0;
+    font-size: 1.05rem;
+  }
+}
+
+/* ================= ROUTER ================= */
+main { position: relative; min-height: 100vh; }
+.page {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .6s, transform .6s;
+  pointer-events: none;
+}
+.page.active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* ================= HERO ================= */
+.hero {
+  min-height: 90vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.hero h1 {
+  font-size: clamp(3.5rem, 7vw, 5rem);
+  background: linear-gradient(
+    120deg,
+    var(--a1),
+    var(--a2),
+    var(--a3),
+    var(--a1)
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientShift 8s ease infinite;
+  text-shadow:
+    0 0 35px rgba(255,122,217,.45),
+    0 0 70px rgba(124,124,255,.25);
+}
+@keyframes gradientShift {
+  50% { background-position: 100% 50%; }
+}
+.hero p {
+  max-width: 620px;
+  margin-top: 20px;
+  color: var(--muted);
+}
+
+/* ================= CONTENT ================= */
+section {
+  max-width: 1100px;
+  margin: auto;
+  padding: 90px 24px;
+}
+.grid {
+  display: grid;
+  gap: 24px;
+}
+.grid.two { grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); }
+.grid.three { grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); }
+
+.card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform .15s ease;
+}
+
+/* ================= ARTICLE ================= */
+.article {
+  max-width: 800px;
+  margin: auto;
+}
+.article h2 { font-size: 2.2rem; margin-bottom: 20px; }
+.article p { color: var(--muted); line-height: 1.8; margin-bottom: 16px; }
+
+/* ================= FOOTER ================= */
+footer {
+  text-align: center;
+  padding: 60px 20px 40px;
+  color: var(--muted);
+}
+
+/* ================= MAGNETIC ================= */
+.magnetic { will-change: transform; }
+</style>
+</head>
+
+<body>
+
+<div class="intro"><h1>Irewynna</h1></div>
+<div class="cursor"></div>
+
+<header>
+  <div class="header-inner">
+    <div class="brand magnetic" data-link="home">Irewynna</div>
+
+    <div class="hamburger magnetic" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <nav id="navMenu">
+      <a class="magnetic" data-link="about">About</a>
+      <a class="magnetic" data-link="projects">Projects</a>
+      <a class="magnetic" data-link="blogs">Blogs</a>
+      <a class="magnetic" data-link="education">Education</a>
+      <span class="theme-btn magnetic">☀︎ / ☾</span>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+
+<div class="page active" id="home">
+  <section class="hero">
+    <div>
+      <h1>Irewynna</h1>
+      <p>Minimalist. Colorful. Expressive digital portfolio.</p>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="about">
+  <section>
+    <h2>About</h2>
+    <div class="card magnetic">
+      Irewynna is a creative technologist focused on elegant interfaces,
+      expressive motion, and thoughtful systems design.
+    </div>
+  </section>
+</div>
+
+<div class="page" id="projects">
+  <section>
+    <h2>Projects</h2>
+    <div class="grid three">
+      <div class="card magnetic">Aurora — visual motion experiments</div>
+      <div class="card magnetic">Atlas — personal knowledge system</div>
+      <div class="card magnetic">Echo — animated journaling platform</div>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="blogs">
+  <section>
+    <h2>Blogs</h2>
+    <div class="grid two">
+      <div class="card magnetic" data-article="0">Designing with Restraint</div>
+      <div class="card magnetic" data-article="1">Why Motion Matters</div>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="article">
+  <section class="article">
+    <h2 id="articleTitle"></h2>
+    <p id="articleBody"></p>
+    <div class="card magnetic" data-link="blogs">← Back to Blogs</div>
+  </section>
+</div>
+
+<div class="page" id="education">
+  <section>
+    <h2>Education</h2>
+    <div class="grid two">
+      <div class="card magnetic">Computer Science — Software & Systems</div>
+      <div class="card magnetic">Independent Learning — Design & Animation</div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  © <span id="year"></span> Irewynna. All rights reserved.
+</footer>
+
+<script>
+const cursor = document.querySelector(".cursor");
+window.addEventListener("mousemove", e => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
+/* ================= MOBILE MENU ================= */
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("navMenu");
+
+hamburger.onclick = () => {
+  navMenu.classList.toggle("open");
+};
+
+/* Close menu on navigation */
+document.querySelectorAll("nav a, nav .theme-btn").forEach(el => {
+  el.addEventListener("click", () => {
+    navMenu.classList.remove("open");
+  });
+});
+
+
+document.querySelectorAll("a, .card, .brand").forEach(el => {
+  el.addEventListener("mouseenter", () => cursor.classList.add("active"));
+  el.addEventListener("mouseleave", () => cursor.classList.remove("active"));
+});
+
+document.querySelectorAll(".magnetic").forEach(el => {
+  el.addEventListener("mousemove", e => {
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - (r.left + r.width / 2);
+    const y = e.clientY - (r.top + r.height / 2);
+    el.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+  });
+  el.addEventListener("mouseleave", () => el.style.transform = "translate(0,0)");
+});
+
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("mousemove", e => {
+    const r = card.getBoundingClientRect();
+    const rx = ((e.clientY - r.top) / r.height - .5) * -14;
+    const ry = ((e.clientX - r.left) / r.width - .5) * 14;
+    card.style.transform += ` rotateX(${rx}deg) rotateY(${ry}deg)`;
+  });
+  card.addEventListener("mouseleave", () => card.style.transform = "translate(0,0)");
+});
+
+const root = document.documentElement;
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) root.setAttribute("data-theme", savedTheme);
+document.querySelector(".theme-btn").onclick = () => {
+  const t = root.getAttribute("data-theme") === "light" ? "" : "light";
+  root.setAttribute("data-theme", t);
+  localStorage.setItem("theme", t);
+};
+
+const pages = document.querySelectorAll(".page");
+function showPage(id) {
+  pages.forEach(p => p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("[data-link]").forEach(el => {
+  el.onclick = () => showPage(el.dataset.link);
+});
+
+const articles = [
+  {
+    title: "Designing with Restraint",
+    body: "Minimalism is not about removing features, but removing noise."
+  },
+  {
+    title: "Why Motion Matters",
+    body: "Motion guides attention and adds emotional clarity."
+  }
+];
+document.querySelectorAll("[data-article]").forEach(el => {
+  el.onclick = () => {
+    const a = articles[el.dataset.article];
+    articleTitle.textContent = a.title;
+    articleBody.textContent = a.body;
+    showPage("article");
+  };
+});
+
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioCtx();
+function tone(f) {
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.frequency.value = f;
+  g.gain.value = 0.05;
+  o.connect(g).connect(audioCtx.destination);
+  o.start();
+  o.stop(audioCtx.currentTime + 0.08);
+}
+document.querySelectorAll(".card, a").forEach(el => {
+  el.addEventListener("mouseenter", () => tone(360));
+  el.addEventListener("click", () => tone(520));
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
